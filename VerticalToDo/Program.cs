@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Lamar.Microsoft.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using System;
 
 namespace VerticalToDo
 {
@@ -16,11 +13,22 @@ namespace VerticalToDo
             CreateHostBuilder(args).Build().Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            var configBuilder = new ConfigurationBuilder()
+               .SetBasePath(Environment.CurrentDirectory)
+
+               .AddJsonFile("appsettings.json", false, true)
+               .AddJsonFile($"appsettings.{environment}.json", true, true);
+            return Host.CreateDefaultBuilder(args)
+                    .UseLamar()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder
+                    .UseConfiguration(configBuilder.Build())
+                    .UseStartup<Startup>();
                 });
+        }
     }
 }
