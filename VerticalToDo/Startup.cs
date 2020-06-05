@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -11,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Text;
 using System.Text.Json.Serialization;
+using VerticalToDo.Core;
 using VerticalToDo.Infrastructure.Extensions;
 using VerticalToDo.Infrastructure.HttpMiddleware;
 using VueCliMiddleware;
@@ -38,6 +40,8 @@ namespace VerticalToDo
             {
                 configuration.RootPath = "ClientApp";
             });
+
+            services.AddEntityFrameworkSqlServer();
 
             #region setupAuthAndSwagger
 
@@ -99,9 +103,11 @@ namespace VerticalToDo
 
             #endregion
 
-            services.For<IConfiguration>().Use(Configuration);
-            services.For<IHttpContextAccessor>().Use<HttpContextAccessor>();
             services.SetupRegistries();
+            services.AddDbContext<VerticalToDoDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("VerticalToDo")));
+
+            var c = new Container(services);
+            var q = c.WhatDoIHave();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -21,11 +21,15 @@ namespace VerticalToDo.Infrastructure.Registries
             });
 
             // This is the default but let's be explicit. At most we should be container scoped.
-            For<IMediator>().Use<Mediator>().Scoped();
-
+            For<IMediator>().Use<Mediator>().Setter<IMediator>("Mediator");
             For<ServiceFactory>().Use(ctx => ctx.GetInstance);
-            // Configure decorators over feature handlers
 
+            Policies.SetAllProperties(c =>
+            {
+                c.NameMatches(x => x == "Mediator");
+            });
+
+            // Configure decorators over feature handlers
             For(typeof(IRequestHandler<,>)).DecorateAllWith(typeof(MediatorPipelineHandler<,>));
         }
     }

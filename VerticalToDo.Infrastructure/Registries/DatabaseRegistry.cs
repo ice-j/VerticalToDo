@@ -1,7 +1,5 @@
 ﻿using Lamar;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using VerticalToDo.Core;
 
 namespace VerticalToDo.Infrastructure.Registries
@@ -10,11 +8,12 @@ namespace VerticalToDo.Infrastructure.Registries
     {
         public DatabaseRegistry()
         {
-            this.AddDbContext<VerticalToDoDbContext>((options) =>
+            For<VerticalToDoDbContext>().Use(x =>
             {
-                var config = Find(x => x.ServiceType == typeof(IConfiguration)).ImplementationInstance as IConfiguration;
-                options.UseSqlServer(config.GetConnectionString("VerticalToDo"));
-            });
+                var c = x.GetInstance<IConfiguration>();
+                return new VerticalToDoDbContext(c.GetConnectionString("VerticalTodo"));
+            }).Scoped();
+            
         }
     }
 }

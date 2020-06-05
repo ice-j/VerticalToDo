@@ -1,5 +1,10 @@
-﻿using System.Threading;
+﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using VerticalToDo.Abstractions.Exceptions;
+using VerticalToDo.Core.Features.Accounts;
 
 namespace VerticalToDo.Services.Features.Accounts
 {
@@ -11,7 +16,7 @@ namespace VerticalToDo.Services.Features.Accounts
             public string Password { get; set; }
         }
 
-        public class Response : BaseResponse
+        public class Response : AuthenticationResponse
         {
 
         }
@@ -20,7 +25,8 @@ namespace VerticalToDo.Services.Features.Accounts
         {
             public Validator()
             {
-
+                RuleFor(x => x.EmailAddress).NotEmpty().EmailAddress();
+                RuleFor(x => x.Password).MinimumLength(6);
             }
         }
 
@@ -28,7 +34,18 @@ namespace VerticalToDo.Services.Features.Accounts
         {
             public override async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                return await Task.FromResult(new Response());
+                var account = await Query<Account>().FirstOrDefaultAsync(x => x.EmailAddress == request.EmailAddress);
+                if (account == null)
+                    throw new CustomException("Invalid email address or password");
+
+                if(account.Password != request.Password)
+                    throw new CustomException("Invalid email address or password");
+
+                return new Response
+                {
+                    UserId = account.Id,
+                    Username = account.EmailAddress
+                };
             }
         }
     }

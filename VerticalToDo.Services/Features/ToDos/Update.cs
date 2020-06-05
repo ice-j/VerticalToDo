@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using VerticalToDo.Abstractions.Exceptions;
+using VerticalToDo.Core.Features.ToDos;
 
 namespace VerticalToDo.Services.Features.ToDos
 {
@@ -11,6 +13,7 @@ namespace VerticalToDo.Services.Features.ToDos
             public Guid Id { get; set; }
             public string Title { get; set; }
             public string Description { get; set; }
+            public DateTimeOffset? DueDate { get; set; }
         }
 
         public class Response : BaseResponse
@@ -30,7 +33,20 @@ namespace VerticalToDo.Services.Features.ToDos
         {
             public override async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                return await Task.FromResult(new Response());
+                var item = await GetById<ToDo>(request.Id);
+                if (item == null)
+                    throw new CustomException("Item not found");
+
+                if (item.AccountId != _currentUser.Id)
+                    throw new CustomException("You can only edit your own ToDo items");
+
+                item.Title = request.Title;
+                item.Description = request.Description;
+                item.DueDate = request.DueDate;
+
+                Update(item);
+
+                return new Response();
             }
         }
     }

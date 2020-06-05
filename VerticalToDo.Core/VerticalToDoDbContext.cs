@@ -28,10 +28,7 @@ namespace VerticalToDo.Core
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!string.IsNullOrEmpty(_connectionString))
-            {
-                optionsBuilder.UseSqlServer(_connectionString);
-            }
+            optionsBuilder.UseSqlServer(_connectionString);
             base.OnConfiguring(optionsBuilder);
         }
     }

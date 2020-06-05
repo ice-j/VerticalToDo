@@ -10,9 +10,9 @@ namespace VerticalToDo.Infrastructure.Extensions
     {
         public static ServiceRegistry SetupRegistries(this ServiceRegistry services)
         {
+            services.IncludeRegistry<MediatrRegistry>();
             services.IncludeRegistry<AbstractionsRegistry>();
             services.IncludeRegistry<DatabaseRegistry>();
-            services.IncludeRegistry<MediatrRegistry>();
             return services;
         }
     }

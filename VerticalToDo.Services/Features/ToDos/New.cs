@@ -1,5 +1,7 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
+using VerticalToDo.Core.Features.ToDos;
 
 namespace VerticalToDo.Services.Features.ToDos
 {
@@ -9,11 +11,12 @@ namespace VerticalToDo.Services.Features.ToDos
         {
             public string Title { get; set; }
             public string Description { get; set; }
+            public DateTimeOffset? DueDate { get; set; }
         }
 
         public class Response : BaseResponse
         {
-
+            public Guid Id { get; set; }
         }
 
         public class Validator : BaseValidator<Request>
@@ -28,7 +31,18 @@ namespace VerticalToDo.Services.Features.ToDos
         {
             public override async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                return await Task.FromResult(new Response());
+                var item = new ToDo
+                {
+                    Title = request.Title,
+                    AccountId = _currentUser.Id,
+                    Description = request.Description,
+                    DueDate = request.DueDate
+                };
+                var id = Add(item);
+                return new Response
+                {
+                    Id = id
+                };
             }
         }
     }
