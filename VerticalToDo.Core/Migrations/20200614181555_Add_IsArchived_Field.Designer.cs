@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VerticalToDo.Core;
 
 namespace VerticalToDo.Core.Migrations
 {
     [DbContext(typeof(VerticalToDoDbContext))]
-    partial class VerticalToDoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200614181555_Add_IsArchived_Field")]
+    partial class Add_IsArchived_Field
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

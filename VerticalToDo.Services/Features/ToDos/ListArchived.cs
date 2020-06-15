@@ -4,12 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using VerticalToDo.Core.Features.Accounts;
 using VerticalToDo.Core.Features.ToDos;
 
 namespace VerticalToDo.Services.Features.ToDos
 {
-    public class List
+    public class ListArchived
     {
         public class Request : BasePaginationRequest<Response>
         {
@@ -40,7 +39,7 @@ namespace VerticalToDo.Services.Features.ToDos
         {
             public override async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var items = await Query<ToDo>().Where(x => x.AccountId == _currentUser.Id && !x.IsArchived).Take(request.PageSize).Skip(request.Skip).ToListAsync();
+                var items = await Query<ToDo>().Where(x => x.AccountId == _currentUser.Id && x.IsArchived).Take(request.PageSize).Skip(request.Skip).ToListAsync();
                 return new Response
                 {
                     Items = items.Select(x => new Response.Item

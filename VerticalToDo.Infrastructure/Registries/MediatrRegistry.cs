@@ -13,23 +13,16 @@ namespace VerticalToDo.Infrastructure.Registries
             {
                 scanner.TheCallingAssembly();
                 scanner.AssemblyContainingType(typeof(BaseHandler<,>));
-                scanner.AssemblyContainingType(typeof(IRequestHandler<,>));
 
                 scanner.ConnectImplementationsToTypesClosing(typeof(BaseValidator<>));
-                scanner.ConnectImplementationsToTypesClosing(typeof(BasePaginationValidator<,>));
                 scanner.ConnectImplementationsToTypesClosing(typeof(IRequestHandler<,>));
+                scanner.ConnectImplementationsToTypesClosing(typeof(INotificationHandler<>));
             });
 
             // This is the default but let's be explicit. At most we should be container scoped.
-            For<IMediator>().Use<Mediator>().Setter<IMediator>("Mediator");
-            For<ServiceFactory>().Use(ctx => ctx.GetInstance);
+            For<IMediator>().Add<Mediator>().Scoped();
+            For<ServiceFactory>().Add(ctx => ctx.GetInstance);
 
-            Policies.SetAllProperties(c =>
-            {
-                c.NameMatches(x => x == "Mediator");
-            });
-
-            // Configure decorators over feature handlers
             For(typeof(IRequestHandler<,>)).DecorateAllWith(typeof(MediatorPipelineHandler<,>));
         }
     }

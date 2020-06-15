@@ -10,6 +10,7 @@ namespace VerticalToDo
 {
     [Authorize]
     [ApiController]
+    [Produces("application/json")]
     public class BaseController : ControllerBase
     {
         private IMediator _mediator;

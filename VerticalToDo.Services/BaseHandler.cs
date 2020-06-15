@@ -31,7 +31,7 @@ namespace VerticalToDo.Services
         public VerticalToDoDbContext DbContext
         {
             set
-            {
+            { 
                 if (_dbContext != null)
                     throw new CustomException("DbContext has already beeen initialized!");
                 else

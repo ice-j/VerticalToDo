@@ -1,0 +1,15 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"src/**/**/**.js**": true
+		},
+		"prettier.trailingComma": "none",
+		"editor.formatOnSave": true,
+		"prettier.arrowParens": "avoid"
+	}
+}

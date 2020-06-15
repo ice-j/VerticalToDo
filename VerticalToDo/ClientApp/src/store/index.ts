@@ -5,7 +5,20 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {},
-  mutations: {},
+  mutations: {
+    authChanged() {
+      return;
+    },
+    notify() {
+      return;
+    },
+    errors() {
+      return;
+    },
+    onError() {
+      return;
+    },
+  },
   actions: {},
-  modules: {}
+  modules: {},
 });

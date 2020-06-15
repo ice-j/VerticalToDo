@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Text;
 using System.Text.Json.Serialization;
+using VerticalToDo.Controllers;
 using VerticalToDo.Core;
 using VerticalToDo.Infrastructure.Extensions;
 using VerticalToDo.Infrastructure.HttpMiddleware;
@@ -30,7 +31,7 @@ namespace VerticalToDo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureContainer(ServiceRegistry services)
         {
-            services.AddControllers()
+            services.AddMvc().AddControllersAsServices()
                 .AddJsonOptions(x =>
                 {
                     x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -58,7 +59,7 @@ namespace VerticalToDo
                             // We recommend 5 minutes or less:
                             ClockSkew = TimeSpan.FromMinutes(5),
                             // Specify the key used to sign the token:
-                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("VerticalToDoKey")),
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("VerticalToDoKeyVerticalToDoKeyVerticalToDoKey")),
                             RequireSignedTokens = true,
                             // Ensure the token hasn't expired:
                             RequireExpirationTime = true,
@@ -103,10 +104,13 @@ namespace VerticalToDo
 
             #endregion
 
-            services.SetupRegistries();
+            services.For<IConfiguration>().Use(Configuration);
+            services.For<IHttpContextAccessor>().Use<HttpContextAccessor>();
             services.AddDbContext<VerticalToDoDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("VerticalToDo")));
+            services.SetupRegistries();
 
             var c = new Container(services);
+            var a = c.Model.For<AccountsController>().Default.DescribeBuildPlan();
             var q = c.WhatDoIHave();
         }
 
@@ -146,7 +150,7 @@ namespace VerticalToDo
 
                 if (env.IsDevelopment())
                 {
-                    spa.UseVueCli(npmScript: "serve");
+                    spa.UseVueCli(npmScript: "serve", forceKill: true);
                 }
 
             });

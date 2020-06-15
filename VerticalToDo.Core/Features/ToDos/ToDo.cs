@@ -13,5 +13,6 @@ namespace VerticalToDo.Core.Features.ToDos
         [ForeignKey(nameof(AccountId))]
         public Guid AccountId { get; set; }
         public virtual Account Account { get; set; }
+        public bool IsArchived { get; set; }
     }
 }

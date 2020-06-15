@@ -110,7 +110,7 @@ namespace VerticalToDo.Infrastructure.Decorators
                     claims: claims,
                     expires: DateTime.UtcNow.AddSeconds(30),
                     notBefore: DateTime.UtcNow,
-                    signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes("VerticalToDoKey")), SecurityAlgorithms.HmacSha256)
+                    signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes("VerticalToDoKeyVerticalToDoKeyVerticalToDoKey")), SecurityAlgorithms.HmacSha256)
                 );
 
             response.Token = new JwtSecurityTokenHandler().WriteToken(token);
