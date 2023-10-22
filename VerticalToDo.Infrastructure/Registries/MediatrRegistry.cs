@@ -21,7 +21,7 @@ namespace VerticalToDo.Infrastructure.Registries
 
             // This is the default but let's be explicit. At most we should be container scoped.
             For<IMediator>().Add<Mediator>().Scoped();
-            For<ServiceFactory>().Add(ctx => ctx.GetInstance);
+            //For<ServiceFactory>().Add(ctx => ctx.GetInstance);
 
             For(typeof(IRequestHandler<,>)).DecorateAllWith(typeof(MediatorPipelineHandler<,>));
         }

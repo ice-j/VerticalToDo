@@ -133,7 +133,7 @@ namespace VerticalToDo
             app.UseSwaggerUI(setup =>
             {
                 setup.EnableValidator();
-                setup.SwaggerEndpoint("/swagger/v1/swagger.json", "Hiketivity API");
+                setup.SwaggerEndpoint("/swagger/v1/swagger.json", "VerticalToDo API");
             });
 
             app.UseEndpoints(endpoints =>
@@ -141,19 +141,19 @@ namespace VerticalToDo
                 endpoints.MapControllers();
             });
 
-            app.UseSpa(spa =>
-            {
-                if (env.IsDevelopment())
-                    spa.Options.SourcePath = "ClientApp";
-                else
-                    spa.Options.SourcePath = "dist";
-
-                if (env.IsDevelopment())
-                {
-                    spa.UseVueCli(npmScript: "serve", forceKill: true);
-                }
-
-            });
+            // app.UseSpa(spa =>
+            // {
+            //     if (env.IsDevelopment())
+            //         spa.Options.SourcePath = "ClientApp";
+            //     else
+            //         spa.Options.SourcePath = "dist";
+            //
+            //     if (env.IsDevelopment())
+            //     {
+            //         spa.UseVueCli(npmScript: "serve", forceKill: true);
+            //     }
+            //
+            // });
         }
     }
 }

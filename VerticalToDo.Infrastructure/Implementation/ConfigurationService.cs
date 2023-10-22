@@ -14,6 +14,6 @@ namespace VerticalToDo.Infrastructure.Implementation
 
         public string ConnectionString => _configuration.GetConnectionString("VerticalToDo");
 
-        public string AuthTokenLifetimeInSeconds => _configuration.GetSection("AppSettings").GetValue<string>(nameof(AuthTokenLifetimeInSeconds));
+        public string AuthTokenLifetimeInSeconds => _configuration.GetSection("AppSettings")[nameof(AuthTokenLifetimeInSeconds)];
     }
 }

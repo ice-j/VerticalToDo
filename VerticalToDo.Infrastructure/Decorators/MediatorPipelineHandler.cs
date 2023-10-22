@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -14,6 +15,8 @@ using System.Threading.Tasks;
 using VerticalToDo.Abstractions;
 using VerticalToDo.Abstractions.Exceptions;
 using VerticalToDo.Services;
+using ValidationException = FluentValidation.ValidationException;
+using ValidationFailure = FluentValidation.Results.ValidationFailure;
 
 namespace VerticalToDo.Infrastructure.Decorators
 {
@@ -88,11 +91,11 @@ namespace VerticalToDo.Infrastructure.Decorators
 
         private IEnumerable<ValidationFailure> Validate(TRequest request)
         {
-            ValidatorOptions.LanguageManager.Enabled = true;
-            ValidatorOptions.LanguageManager.Culture = Thread.CurrentThread.CurrentCulture;
+            ValidatorOptions.Global.LanguageManager.Enabled = true;
+            ValidatorOptions.Global.LanguageManager.Culture = Thread.CurrentThread.CurrentCulture;
             var context = new ValidationContext(request);
             return _validators
-                .Select(validator => validator.Validate(context))
+                .Select(validator => validator.Validate(request))
                 .SelectMany(result => result.Errors);
         }
 
